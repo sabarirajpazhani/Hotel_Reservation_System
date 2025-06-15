@@ -221,3 +221,18 @@ as
 	inner join Hotels h on r.HotelID = h.HotelID
 
 select * from vw_CustomerBookingDetails;
+
+--13.Create a scalar function fn_TotalRoomsAvailable(@HotelID) to return available rooms count.
+create function fn_TotalRoomsAvailable(
+	@HotelID varchar(80)
+)
+returns int
+as
+begin
+	declare @Count int
+	 select @Count = count(*) from Rooms
+	 where HotelID = @HotelID and Status = 'Available';
+	return @Count
+end
+
+select dbo.fn_TotalRoomsAvailable(1);
