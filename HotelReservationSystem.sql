@@ -290,3 +290,24 @@ begin
 end
 
 exec sp_InsertBooking 4, 101, '2025-06-09', '2025-06-11';
+
+--Triggers
+--16.Write a trigger to update Room.Status to 'Occupied' when a new booking is inserted.
+create trigger tr_InsertStatus
+on Rooms
+after insert
+as
+begin	
+	declare @RoomID int
+	select @RoomID = RoomID from inserted
+
+	update Rooms
+	set Status = 'Occupied'
+	where RoomID = @RoomID
+
+	/*update r 
+	set r.Status = 'Occupied'
+	from Rooms r
+	inner join inserted i  on r.RoomID = i.RoomID*/
+end;
+
