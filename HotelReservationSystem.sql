@@ -253,3 +253,40 @@ begin
 end;
 
 exec sp_GetHotelRevenue 1;
+
+--15. Create a stored procedure sp_InsertBooking(...) to insert a booking record.
+alter procedure sp_InsertBooking
+	@CustomerID int,
+	@RoomID int,
+	@CheckInDate date,
+	@CheckOutDate date
+as
+begin
+	if exists (
+		select r.RoomID , b.CheckInDate, b.CheckOutDate from Bookings b
+		inner join Rooms r on b.RoomID = r.RoomID
+		where r.RoomID = @RoomID
+		and(
+		(@CheckInDate between b.CheckInDate and b.CheckOutDate) 
+			or
+		(@CheckOutDate between b.CheckInDate and b.CheckOutDate)
+			or
+		(b.CheckInDate between @CheckInDate and @CheckOutDate)
+		)
+	)
+	begin
+		print 'Already Room Booked'
+		return
+	end
+	declare @BookingID int, @Amount decimal(10,2)
+	select @BookingID = Max(BookingID)+1 from Bookings
+
+	select @Amount = PerDayPrice from Rooms
+	where RoomID = @RoomID and Status = 'Available'
+
+	insert into Bookings values
+	(@BookingID, @CustomerID, @RoomID, Getdate(), @CheckInDate, @CheckOutDate, @Amount)
+
+end
+
+exec sp_InsertBooking 4, 101, '2025-06-09', '2025-06-11';
