@@ -124,9 +124,6 @@ INSERT INTO CustomerFeedback VALUES
 (402, 2, 1, 'Great service and food.'),
 (403, 3, 2, 'Nice view and clean rooms.');
 
-
-
-
 SELECT * FROM Customers;
 SELECT * FROM Hotels;
 SELECT * FROM RoomTypes;
@@ -182,3 +179,10 @@ select h.HotelName , count(*) as TotalRoomBooked from Bookings b
 inner join Rooms r on r.RoomID = b.RoomID
 inner join Hotels h on h.HotelID  = r.HotelID
 group by h.HotelName
+
+--7. Show total amount collected from each payment type.
+select pt.PaymentName , sum(p.AmountPaid) as TotalAmount from Payment p 
+inner join PaymentType pt  on p.PaymentTypeID = pt.PaymentTypeID
+group by pt.PaymentName;
+
+--
