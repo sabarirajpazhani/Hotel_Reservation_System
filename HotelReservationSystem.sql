@@ -138,7 +138,7 @@ SELECT * FROM Payment;
 SELECT * FROM PaymentStatus;
 SELECT * FROM CustomerFeedback;
 
-
+--Joins & Real-Time Logic
 -- 1. Write a query to display CustomerName, HotelName, RoomTypeName, BookingDate, and CheckInDate for all bookings.
 select c.CustomerName, h.HotelName, rt.RoomTypeName, b.BookingDate, b.CheckInDate
 from Bookings b
@@ -175,3 +175,10 @@ inner join Payment p on p.CustomerID = c.CustomerID
 inner join PaymentType pt on p.PaymentTypeID = pt.PaymentTypeID
 inner join PaymentStatus ps on ps.PaymentID = p.PaymentID
 where pt.PaymentName = 'UPI' and ps.Status ='Success'
+
+--Aggregation & Grouping
+--6. Display number of rooms booked per hotel with hotel name.
+select h.HotelName , count(*) as TotalRoomBooked from Bookings b
+inner join Rooms r on r.RoomID = b.RoomID
+inner join Hotels h on h.HotelID  = r.HotelID
+group by h.HotelName
