@@ -154,3 +154,18 @@ inner join Bookings b  on p.BookingID = b.BookingID
 inner join Rooms r on r.RoomID = b.RoomID
 inner join Hotels h on h.HotelID = r.HotelID
 group by h.HotelName;
+
+--3. Get the names of customers who stayed in Deluxe rooms at The Grand hotel.
+select c.CustomerName from Customers c
+join Bookings b on b.CustomerID = c.CustomerID
+join Rooms r on r.RoomID = b.RoomID
+join RoomTypes rt on rt.RoomTypeID = r.RoomTypeID
+join Hotels h on h.HotelID = r.HotelID
+where rt.RoomTypeName = 'Deluxe' and h.HotelName = 'The Grand' 
+
+--4. Find customers who have made more than one booking.
+select c.CustomerName , Count(*) as NumberOfBooking from Bookings b
+inner join Customers c  on c.CustomerID = b.CustomerID
+Group by c.CustomerName 
+having Count(*) >1;
+
