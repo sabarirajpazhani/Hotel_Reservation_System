@@ -190,3 +190,11 @@ select h.HotelName , Count(*) as NumberOfFeedBack from CustomerFeedback f
 inner join Hotels h on f.HotelID = h.HotelID
 group by h.HotelName 
 having count(*) > 1;
+
+--Subqueries & Filtering
+--9. List customers who have never given feedback.
+insert into Customers values 
+(4, 'Lakshmi',  'lakshmi@gmail.com', '9988776644', 'Cuddalore')
+
+select c.CustomerName from Customers c
+where c.CustomerID not in (Select f.CustomerID from CustomerFeedback f);
