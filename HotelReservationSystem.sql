@@ -203,3 +203,9 @@ where c.CustomerID not in (Select f.CustomerID from CustomerFeedback f);
 select Max(r.PerDayPrice) as HighestPrice from Rooms r
 join Hotels h on r.HotelID = h.HotelID
 where h.Location = 'Pondicherry'
+
+--11. Display the customer who made the maximum total payment.
+select top 1 c.CustomerName , sum(p.AmountPaid) from Payment p
+inner join Customers c on p.CustomerID = c.CustomerID 
+group by c.CustomerName 
+order by sum(p.AmountPaid) desc;
