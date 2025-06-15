@@ -169,3 +169,9 @@ inner join Customers c  on c.CustomerID = b.CustomerID
 Group by c.CustomerName 
 having Count(*) >1;
 
+--5.List customers who paid via UPI and whose payment was successful.
+select c.CustomerName , pt.PaymentName, ps.Status from Customers c
+inner join Payment p on p.CustomerID = c.CustomerID
+inner join PaymentType pt on p.PaymentTypeID = pt.PaymentTypeID
+inner join PaymentStatus ps on ps.PaymentID = p.PaymentID
+where pt.PaymentName = 'UPI' and ps.Status ='Success'
