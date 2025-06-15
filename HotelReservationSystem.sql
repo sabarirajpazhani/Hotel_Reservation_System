@@ -147,3 +147,10 @@ inner join Rooms r on b.RoomID = r.RoomID
 inner join Hotels h on r.HotelID = h.HotelID
 inner join RoomTypes rt on r.RoomTypeID = rt.RoomTypeID
 
+--2. Write a query to find total revenue per hotel using Payment, Bookings, and Hotels tables.
+select h.HotelName, sum(p.AmountPaid) as Revenue
+from Payment p
+inner join Bookings b  on p.BookingID = b.BookingID 
+inner join Rooms r on r.RoomID = b.RoomID
+inner join Hotels h on h.HotelID = r.HotelID
+group by h.HotelName;
