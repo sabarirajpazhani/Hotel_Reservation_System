@@ -185,4 +185,8 @@ select pt.PaymentName , sum(p.AmountPaid) as TotalAmount from Payment p
 inner join PaymentType pt  on p.PaymentTypeID = pt.PaymentTypeID
 group by pt.PaymentName;
 
---
+--8. List hotels that received more than 1 feedback from customers.
+select h.HotelName , Count(*) as NumberOfFeedBack from CustomerFeedback f
+inner join Hotels h on f.HotelID = h.HotelID
+group by h.HotelName 
+having count(*) > 1;
