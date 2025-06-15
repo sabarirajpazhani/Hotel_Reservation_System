@@ -209,3 +209,15 @@ select top 1 c.CustomerName , sum(p.AmountPaid) from Payment p
 inner join Customers c on p.CustomerID = c.CustomerID 
 group by c.CustomerName 
 order by sum(p.AmountPaid) desc;
+
+
+--Views, Functions, Stored Procedures
+--12. Create a view: vw_CustomerBookingDetails with CustomerName, RoomID, HotelName, AmountPaid.
+create view vw_CustomerBookingDetails
+as
+	select c.CustomerName, r.RoomID, h.HotelName, b.Amount from Bookings b
+	inner join Customers c on b.CustomerID = c.CustomerID 
+	inner join Rooms r on b.RoomID = r.RoomID
+	inner join Hotels h on r.HotelID = h.HotelID
+
+select * from vw_CustomerBookingDetails;
