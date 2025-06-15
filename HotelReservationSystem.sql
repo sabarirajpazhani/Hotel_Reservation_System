@@ -198,3 +198,8 @@ insert into Customers values
 
 select c.CustomerName from Customers c
 where c.CustomerID not in (Select f.CustomerID from CustomerFeedback f);
+
+--10. Find the highest room price available in Pondicherry.
+select Max(r.PerDayPrice) as HighestPrice from Rooms r
+join Hotels h on r.HotelID = h.HotelID
+where h.Location = 'Pondicherry'
