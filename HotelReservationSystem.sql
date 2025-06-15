@@ -323,3 +323,59 @@ end
 
 delete from Payment
 where PaymentID = 301;
+
+--UDDT & Indexes
+--18. Create a User Defined Data Type EmailType for CustomerEmail using VARCHAR(100).
+create type EmailType from varchar(80);
+
+--19. Create a non-clustered index on CustomerPhone in Customers, include CustomerName.
+create nonClustered index ix_CustomerPhone on Customers (CustomerPhone)
+include(CustomerName)
+
+--Exception Handling (in Procedure)
+--20. Modify the sp_InsertBooking procedure to raise an error if the room is already occupied.
+create procedure sp_InsertBookings
+	@CustomerID int,
+	@RoomID int,
+	@CheckInDate date,
+	@CheckOutDate date
+as
+begin
+	begin try
+	begin transaction
+	if exists (
+		select r.RoomID , b.CheckInDate, b.CheckOutDate from Bookings b
+		inner join Rooms r on b.RoomID = r.RoomID
+		where r.RoomID = @RoomID
+		and(
+		(@CheckInDate between b.CheckInDate and b.CheckOutDate) 
+			or
+		(@CheckOutDate between b.CheckInDate and b.CheckOutDate)
+			or
+		(b.CheckInDate between @CheckInDate and @CheckOutDate)
+		)
+	)
+	begin
+		raiserror('Already Room Booked',16,1)
+		rollback transaction
+		return
+	end
+	declare @BookingID int, @Amount decimal(10,2)
+	select @BookingID = Max(BookingID)+1 from Bookings
+
+	select @Amount = PerDayPrice from Rooms
+	where RoomID = @RoomID and Status = 'Available'
+
+	insert into Bookings values
+	(@BookingID, @CustomerID, @RoomID, Getdate(), @CheckInDate, @CheckOutDate, @Amount)
+	commit transaction
+	end try
+
+	begin catch
+		rollback transaction
+		Print 'Error Occurre - '+ error_Message();
+	end catch
+end
+
+
+exec sp_InsertBookings 4, 101, '2025-06-09', '2025-06-11';
