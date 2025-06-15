@@ -311,3 +311,15 @@ begin
 	inner join inserted i  on r.RoomID = i.RoomID*/
 end;
 
+--17. Write a DDL trigger to prevent deletion of the Payment table.
+create trigger tr_PreventDeletion
+on Payment
+instead of Delete
+as
+begin
+	raiserror('Payment must not be allowed to delete',16,1)
+	rollback;
+end
+
+delete from Payment
+where PaymentID = 301;
