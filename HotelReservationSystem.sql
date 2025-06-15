@@ -236,3 +236,20 @@ begin
 end
 
 select dbo.fn_TotalRoomsAvailable(1);
+
+--14. Create a stored procedure sp_GetHotelRevenue(@HotelID) to get total revenue.
+Alter procedure  sp_GetHotelRevenue
+	@HotelID int
+as
+begin
+	declare @TotalRevenue decimal(10,2)
+	select @TotalRevenue = sum(p.AmountPaid) from Payment p
+	inner join Bookings b on p.BookingID = b.BookingID
+	inner join Rooms r on r.RoomID = b.RoomID
+	inner join Hotels h on r.HotelID = h.HotelID
+	where h.HotelID = @HotelID
+
+	select @TotalRevenue
+end;
+
+exec sp_GetHotelRevenue 1;
